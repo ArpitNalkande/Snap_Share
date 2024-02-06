@@ -13,6 +13,7 @@ export const register = async (req, res, next) => {
 
   try {
     const userExist = await Users.findOne({ email });
+    console.log("userExist:" + userExist);
 
     if (userExist) {
       next("Email Address already exists");
@@ -35,8 +36,6 @@ export const register = async (req, res, next) => {
     res.status(404).json({ message: error.message });
   }
 };
-
-// for login
 
 export const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -66,7 +65,7 @@ export const login = async (req, res, next) => {
       return;
     }
 
-    // comparing  password
+    // compare password
     const isMatch = await compareString(password, user?.password);
 
     if (!isMatch) {
