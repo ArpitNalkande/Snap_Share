@@ -84,53 +84,53 @@ export const sendVerificationEmail = async (user, res) => {
   }
 };
 
-// export const resetPasswordLink = async (user, res) => {
-//   const { _id, email } = user;
+export const resetPasswordLink = async (user, res) => {
+  const { _id, email } = user;
 
-//   const token = _id + uuidv4();
-//   const link = APP_URL + "users/reset-password/" + _id + "/" + token;
+  const token = _id + uuidv4();
+  const link = APP_URL + "users/reset-password/" + _id + "/" + token;
 
-//   //   mail options
-//   const mailOptions = {
-//     from: AUTH_EMAIL,
-//     to: email,
-//     subject: "Password Reset",
-//     html: `<p style="font-family: Arial, sans-serif; font-size: 16px; color: #333; background-color: #f7f7f7; padding: 20px; border-radius: 5px;">
-//          Password reset link. Please click the link below to reset password.
-//         <br>
-//         <p style="font-size: 18px;"><b>This link expires in 10 minutes</b></p>
-//          <br>
-//         <a href=${link} style="color: #fff; padding: 10px; text-decoration: none; background-color: #000;  border-radius: 8px; font-size: 18px; ">Reset Password</a>.
-//     </p>`,
-//   };
+  //   mail options
+  const mailOptions = {
+    from: AUTH_EMAIL,
+    to: email,
+    subject: "Password Reset",
+    html: `<p style="font-family: Arial, sans-serif; font-size: 16px; color: #333; background-color: #f7f7f7; padding: 20px; border-radius: 5px;">
+         Password reset link. Please click the link below to reset password.
+        <br>
+        <p style="font-size: 18px;"><b>This link expires in 10 minutes</b></p>
+         <br>
+        <a href=${link} style="color: #fff; padding: 10px; text-decoration: none; background-color: #000;  border-radius: 8px; font-size: 18px; ">Reset Password</a>.
+    </p>`,
+  };
 
-//   try {
-//     const hashedToken = await hashString(token);
+  try {
+    const hashedToken = await hashString(token);
 
-//     const resetEmail = await PasswordReset.create({
-//       userId: _id,
-//       email: email,
-//       token: hashedToken,
-//       createdAt: Date.now(),
-//       expiresAt: Date.now() + 600000,
-//     });
+    const resetEmail = await PasswordReset.create({
+      userId: _id,
+      email: email,
+      token: hashedToken,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + 600000,
+    });
 
-//     if (resetEmail) {
-//       transporter
-//         .sendMail(mailOptions)
-//         .then(() => {
-//           res.status(201).send({
-//             success: "PENDING",
-//             message: "Reset Password Link has been sent to your account.",
-//           });
-//         })
-//         .catch((err) => {
-//           console.log(err);
-//           res.status(404).json({ message: "Something went wrong" });
-//         });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     res.status(404).json({ message: "Something went wrong" });
-//   }
-// };
+    if (resetEmail) {
+      transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          res.status(201).send({
+            success: "PENDING",
+            message: "Reset Password Link has been sent to your account.",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).json({ message: "Something went wrong" });
+        });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).json({ message: "Something went wrong" });
+  }
+};
