@@ -16,7 +16,7 @@ import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { apiRequest, handleFileUpload, fetchPosts } from "../utils";
+import { apiRequest, handleFileUpload, fetchPosts, likePost } from "../utils";
 
 const Home = () => {
   const { user, edit } = useSelector((state) => state.user);
@@ -73,10 +73,10 @@ const Home = () => {
     setLoading(false);
   };
 
-  
-
-  // const fetchPost = async (data) => {};
-  const handleLikePost = async (data) => {};
+  const handleLikePost = async (uri) => {
+    await likePost({ uri: uri, token: user?.token });
+    await fetchPost();
+  };
   const handleDelete = async (data) => {};
   const fetchFriendrequests = async (data) => {};
   const fetchSuggestedFriends = async (data) => {};
@@ -113,7 +113,7 @@ const Home = () => {
               <div className="w-full flex items-center gap-2 py-4 border-b border-[#66666645]">
                 <img
                   src={user?.profileUrl ?? NoProfile}
-                  alt="User Image"
+                  alt="User Imagee"
                   className="w-14 h-14 rounded-full object-cover"
                 />
                 <TextInput
@@ -210,8 +210,8 @@ const Home = () => {
                   key={post?._id}
                   post={post}
                   user={user}
-                  deletePost={() => {}}
-                  likePost={() => {}}
+                  deletePost={handleDelete}
+                  likePost={handleLikePost}
                 />
               ))
             ) : (

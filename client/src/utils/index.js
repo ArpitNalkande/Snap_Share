@@ -11,18 +11,21 @@ export const API = axios.create({
 export const apiRequest = async ({ url, token, data, method }) => {
   try {
     const result = await API(url, {
-      method: method || "GET", // Corrected the key to "method"
+      method: method || "GET",
       data: data,
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json", // Corrected content type header
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
     return result?.data;
   } catch (error) {
-    const err = error.response.data;
+    // Ensure error.response exists before accessing its properties
+    const err = error.response
+      ? error.response.data
+      : { success: false, message: "Unknown error" };
     console.log(err);
-    return { status: err.success, message: err.message }; // Corrected the key to "success"
+    return { status: err.success, message: err.message }; // Corrected key to access success property
   }
 };
 
