@@ -8,6 +8,8 @@ import { AiOutlineInteraction } from "react-icons/ai";
 import { ImConnection } from "react-icons/im";
 import { CustomButton, Loading, TextInput } from "../components";
 import { BgImage } from "../assets";
+import { apiRequest } from "../utils";
+import { UserLogin } from "../redux/userSlice";
 
 const Login = () => {
   const {
@@ -18,7 +20,29 @@ const Login = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      const res = await apiRequest({
+        url: "/auth/login",
+        data: data,
+        method: "POST",
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        setErrMsg("");
+
+        const newData = { token: res?.token, ...res?.user };
+        dispatch(UserLogin(newData));
+        window.location.replace("/");
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    }
+  };
 
   const [errMsg, setErrMsg] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -117,7 +141,7 @@ const Login = () => {
           <div className="relative w-full flex items-center justify-center">
             <img
               src={BgImage}
-              alt="Bg Image"
+              alt="Bg Imagee"
               className="w-48 2xl:w-64 h-48 2xl:h-64 rounded-full object-cover"
             />
 
@@ -139,7 +163,7 @@ const Login = () => {
 
           <div className="mt-16 text-center">
             <p className="text-white text-base">
-              Connect with friedns & have share for fun
+              Connect with friends & have share for fun
             </p>
             <span className="text-sm text-white/80">
               Share memories with friends and the world.
