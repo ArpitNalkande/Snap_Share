@@ -10,6 +10,19 @@ import Loading from "./Loading";
 import CustomButton from "./CustomButton";
 import { postComments } from "../assets/data";
 // import { posts } from "../utils";
+import { apiRequest } from "../utils/index";
+
+const getPostComments = async (id) => {
+  try {
+    const res = await apiRequest({
+      url: "/posts/comments/" + id,
+      method: "GET",
+    });
+    return res?.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const ReplyCard = ({ reply, user, handleLike }) => {
   return (
@@ -67,7 +80,40 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
     mode: "onChange",
   });
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    setLoading(true);
+    setErrMsg("");
+    try {
+      const URL = !replyAt
+        ? "/posts/comment/" + id
+        : "/posts/reply-comment/" + id;
+
+      const newData = {
+        comment: data?.comment,
+        from: user?.firstName + " " + user.lastName,
+        replyAt: replyAt,
+      };
+      const res = await apiRequest({
+        url: URL,
+        data: newData,
+        token: user?.token,
+        method: "POST",
+      });
+      if (res?.status === "failed") {
+        setErrMsg(res);
+      } else {
+        reset({
+          comment: ",",
+        });
+        setErrMsg("");
+        await getComments();
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
 
   return (
     <form
@@ -129,8 +175,9 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
 
   const getComments = async () => {
     setReplyComments(0);
+    const result = await getPostComments(id);
 
-    setComments(postComments);
+    setComments(result);
     setLoading(false);
   };
   const handleLike = async (uri) => {
