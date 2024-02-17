@@ -10,22 +10,22 @@ export const API = axios.create({
 
 export const apiRequest = async ({ url, token, data, method }) => {
   try {
-    const result = await API(url, {
+    const result = await API({
+      url: url,
       method: method || "GET",
       data: data,
       headers: {
-        "Content-Type": "application/json", // Corrected content type header
+        "Content-Type": "application/json",
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
     return result?.data;
   } catch (error) {
-    // Ensure error.response exists before accessing its properties
     const err = error.response
       ? error.response.data
       : { success: false, message: "Unknown error" };
     console.log(err);
-    return { status: err.success, message: err.message }; // Corrected key to access success property
+    return { status: err.success, message: err.message };
   }
 };
 
@@ -42,7 +42,7 @@ export const handleFileUpload = async (uploadFile) => {
     return response.data.secure_url;
   } catch (error) {
     console.error("Error uploading file:", error);
-    throw error; // Re-throw the error to be handled by the caller
+    throw error;
   }
 };
 
@@ -73,10 +73,11 @@ export const likePost = async ({ url, token }) => {
     console.log(error);
   }
 };
+
 export const deletePost = async ({ id, token }) => {
   try {
     const res = await apiRequest({
-      url: "/posts/" + id,
+      url: `/posts/${id}`,
       token: token,
       method: "DELETE",
     });
@@ -88,7 +89,7 @@ export const deletePost = async ({ id, token }) => {
 
 export const getUserInfo = async ({ token, id }) => {
   try {
-    const uri = id === undefined ? "/users/get-user" : "/users/get-user/" + id;
+    const uri = id === undefined ? "/users/get-user" : `/users/get-user/${id}`;
     const res = await apiRequest({
       url: uri,
       token: token,
@@ -105,6 +106,7 @@ export const getUserInfo = async ({ token, id }) => {
     console.log(error);
   }
 };
+
 export const sendFriendRequest = async ({ token, id }) => {
   try {
     const res = await apiRequest({

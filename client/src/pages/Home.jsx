@@ -16,7 +16,14 @@ import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { apiRequest, handleFileUpload, fetchPosts, likePost } from "../utils";
+import {
+  apiRequest,
+  handleFileUpload,
+  fetchPosts,
+  likePost,
+  deletePost,
+  handleDelete,
+} from "../utils";
 
 const Home = () => {
   const { user, edit } = useSelector((state) => state.user);
@@ -74,10 +81,13 @@ const Home = () => {
   };
 
   const handleLikePost = async (uri) => {
-    await likePost({ uri: uri, token: user?.token });
+    await likePost({ url: uri, token: user?.token });
     await fetchPost();
   };
-  const handleDelete = async (data) => {};
+  const handleDelete = async (id) => {
+    await deletePost(id, user.token);
+    await fetchPost();
+  };
   const fetchFriendrequests = async (data) => {};
   const fetchSuggestedFriends = async (data) => {};
   const handleFriendRequest = async (data) => {};
