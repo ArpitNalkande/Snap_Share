@@ -173,7 +173,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
   const [replyComments, setReplyComments] = useState(0);
   const [showComments, setShowComments] = useState(0);
 
-  const getComments = async () => {
+  const getComments = async (id) => {
     setReplyComments(0);
     const result = await getPostComments(id);
 
@@ -322,6 +322,10 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
 
                   <div className="mt-2 flex gap-6">
                     <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer">
+                      onClick=
+                      {() => {
+                        handleLike(`/posts/like-comment/${comment?._id}`);
+                      }}
                       {comment?.likes?.includes(user?._id) ? (
                         <BiSolidLike size={20} color="blue" />
                       ) : (
