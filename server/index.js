@@ -22,7 +22,15 @@ const PORT = process.env.PORT || 8080;
 
 dbConnection();
 
-app.use(helmet());
+app.use(
+  helmet(
+    helmet.contentSecurityPolicy({
+      directives: {
+        defaultSrc: ["'self'"],
+      },
+    })
+  )
+);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -31,6 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 app.use(router);
+app.use(cors());
 
 //error middleware
 app.use(errorMiddleware);

@@ -82,7 +82,7 @@ const Home = () => {
   };
 
   const handleLikePost = async (uri) => {
-    await likePost({ url: uri, token: user?.token });
+    await likePost({ uri: uri, token: user?.token });
     await fetchPost();
   };
   const handleDelete = async (id) => {
@@ -277,7 +277,7 @@ const Home = () => {
             )}
           </div>
 
-          {/* RIGJT */}
+          {/* RIGHT */}
           <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
             {/* FRIEND REQUEST */}
             <div className="w-full bg-primary shadow-sm rounded-lg px-6 py-5">

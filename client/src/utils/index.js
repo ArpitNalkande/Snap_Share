@@ -11,7 +11,6 @@ export const API = axios.create({
 export const apiRequest = async ({ url, token, data, method }) => {
   try {
     const result = await API(url, {
-      url: url,
       method: method || "GET",
       data: data,
       headers: {
@@ -81,7 +80,7 @@ export const deletePost = async ({ id, token }) => {
       token: token,
       method: "DELETE",
     });
-    return res;
+    return;
   } catch (error) {
     console.log(error);
   }
@@ -89,7 +88,7 @@ export const deletePost = async ({ id, token }) => {
 
 export const getUserInfo = async ({ token, id }) => {
   try {
-    const uri = id === undefined ? "/users/get-user" : `/users/get-user/${id}`; // corrected URI construction
+    const uri = id === undefined ? "/users/get-user/" : "/users/get-user/" + id; // corrected URI construction
     const res = await apiRequest({
       url: uri,
       token: token,

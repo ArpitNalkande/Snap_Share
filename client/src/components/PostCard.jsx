@@ -103,7 +103,7 @@ const CommentForm = ({ user, id, replyAt, getComments }) => {
         setErrMsg(res);
       } else {
         reset({
-          comment: ",",
+          comment: "",
         });
         setErrMsg("");
         await getComments();
@@ -324,11 +324,12 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
                   <p className="text-ascent-2">{comment?.comment}</p>
 
                   <div className="mt-2 flex gap-6">
-                    <p className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer">
-                      onClick=
-                      {() => {
+                    <p
+                      className="flex gap-2 items-center text-base text-ascent-2 cursor-pointer"
+                      onClick={() => {
                         handleLike(`/posts/like-comment/${comment?._id}`);
                       }}
+                    >
                       {comment?.likes?.includes(user?._id) ? (
                         <BiSolidLike size={20} color="blue" />
                       ) : (
