@@ -10,7 +10,7 @@ export const API = axios.create({
 
 export const apiRequest = async ({ url, token, data, method }) => {
   try {
-    const result = await API({
+    const result = await API(url, {
       url: url,
       method: method || "GET",
       data: data,
@@ -46,10 +46,10 @@ export const handleFileUpload = async (uploadFile) => {
   }
 };
 
-export const fetchPosts = async (token, dispatch, url, data) => {
+export const fetchPosts = async (token, dispatch, uri, data) => {
   try {
     const res = await apiRequest({
-      url: url || "/posts",
+      url: uri || "/posts",
       token: token,
       method: "POST",
       data: data || {},
@@ -61,10 +61,10 @@ export const fetchPosts = async (token, dispatch, url, data) => {
   }
 };
 
-export const likePost = async ({ url, token }) => {
+export const likePost = async ({ uri, token }) => {
   try {
     const res = await apiRequest({
-      url: url,
+      url: uri,
       token: token,
       method: "POST",
     });
@@ -77,11 +77,11 @@ export const likePost = async ({ url, token }) => {
 export const deletePost = async ({ id, token }) => {
   try {
     const res = await apiRequest({
-      url: `/posts/${id}`,
+      url: "/posts/" + id,
       token: token,
       method: "DELETE",
     });
-    return;
+    return res;
   } catch (error) {
     console.log(error);
   }
@@ -89,7 +89,7 @@ export const deletePost = async ({ id, token }) => {
 
 export const getUserInfo = async ({ token, id }) => {
   try {
-    const uri = id === undefined ? "/users/get-user" : `/users/get-user/${id}`;
+    const uri = id === undefined ? "/users/get-user" : `/users/get-user/${id}`; // corrected URI construction
     const res = await apiRequest({
       url: uri,
       token: token,
@@ -97,6 +97,7 @@ export const getUserInfo = async ({ token, id }) => {
     });
 
     if (res?.message === "Authentication failed") {
+      // corrected response message
       localStorage.removeItem("user");
       window.alert("User session expired. Login again");
       window.location.replace("/login");

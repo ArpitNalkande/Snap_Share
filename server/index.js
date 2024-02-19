@@ -18,20 +18,11 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, "views/build")));
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 8080;
 
 dbConnection();
 
-app.use(
-  helmet(
-    helmet.contentSecurityPolicy({
-      directives: {
-        defaultSrc: ["'self'"],
-        // Add other CSP directives as needed
-      },
-    })
-  )
-);
+app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,7 +31,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 app.use(router);
-app.use(cors());
 
 //error middleware
 app.use(errorMiddleware);
