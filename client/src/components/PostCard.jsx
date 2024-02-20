@@ -192,7 +192,7 @@ const PostCard = ({ post, user, deletePost, likePost }) => {
           <img
             src={post?.userId?.profileUrl ?? NoProfile}
             alt={post?.userId?.firstName}
-            className="w-12 h-12 md:w-14 h-14 object-cover rounded-full"
+            className="w-12 h-12 md:w-14  md:h-14 object-cover rounded-full"
           />
         </Link>
 
