@@ -21,9 +21,18 @@ const Profile = () => {
   const uri = "/posts/get-user-post/" + id;
 
   const getUser = async () => {
-    const res = await getUserInfo(user?.token, id);
-    setUserInfo(res);
+    try {
+      const res = await getUserInfo({ token: user?.token, id });
+      if (res) {
+        setUserInfo(res);
+      } else {
+        console.error("User information not available");
+      }
+    } catch (error) {
+      console.error("Error fetching user information:", error);
+    }
   };
+  
 
   const getPosts = async () => {
     await fetchPosts(user.token, dispatch, uri);

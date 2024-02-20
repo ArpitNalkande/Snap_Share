@@ -86,12 +86,10 @@ const Home = () => {
     await fetchPost();
   };
   const handleDelete = async (id) => {
-    console.log("Deleting post with ID:", id);
+    // console.log("Deleting post with ID:", id);
     await deletePost({ id, token: user.token });
     await fetchPost();
   };
-
-  
 
   const fetchFriendrequests = async () => {
     try {
@@ -119,7 +117,7 @@ const Home = () => {
   };
   const handleFriendRequest = async (id) => {
     try {
-      const res = await sendFriendRequest(user.token, id);
+      const res = await sendFriendRequest({ token: user.token, id: id }); // Pass an object with token and id properties
       await fetchSuggestedFriends();
     } catch (error) {
       console.log(error);
