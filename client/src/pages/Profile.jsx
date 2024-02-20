@@ -32,7 +32,6 @@ const Profile = () => {
       console.error("Error fetching user information:", error);
     }
   };
-  
 
   const getPosts = async () => {
     await fetchPosts(user.token, dispatch, uri);
