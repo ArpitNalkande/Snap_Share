@@ -86,9 +86,13 @@ const Home = () => {
     await fetchPost();
   };
   const handleDelete = async (id) => {
-    await deletePost(id, user.token);
+    console.log("Deleting post with ID:", id);
+    await deletePost({ id, token: user.token });
     await fetchPost();
   };
+
+  
+
   const fetchFriendrequests = async () => {
     try {
       const res = await apiRequest({
@@ -135,7 +139,7 @@ const Home = () => {
     }
   };
   const getUser = async () => {
-    const res = await getUserInfo(user?.token);
+    const res = await getUserInfo({ token: user?.token }); // Corrected to pass token as an object
     const newData = { token: user?.token, ...res };
     dispatch(UserLogin(newData));
   };
@@ -266,7 +270,7 @@ const Home = () => {
                   key={post?._id}
                   post={post}
                   user={user}
-                  deletePost={handleDelete}
+                  deletePost={() => handleDelete(post?._id)} // Pass post._id to handleDelete
                   likePost={handleLikePost}
                 />
               ))
