@@ -53,6 +53,7 @@ const EditProfile = () => {
           dispatch(UpdateProfile(false));
         }, 3000);
       }
+      setIsSubmitting(false);
     } catch (error) {
       console.log(error);
       setIsSubmitting(true);

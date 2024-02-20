@@ -98,7 +98,7 @@ const Login = () => {
 
             <Link
               to="/reset-password"
-              className=" text-sm text-right text-blue font-semibold "
+              className=" text-sm text-right text-blue font-semibold hidden"
             >
               Forgot Password ?
             </Link>
@@ -120,7 +120,7 @@ const Login = () => {
             ) : (
               <CustomButton
                 type="submit"
-                containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none `}
+                containerStyles={`inline-flex justify-center rounded-md bg-blue px-8 py-3 text-sm font-medium text-white outline-none m-3`}
                 title="Login"
               />
             )}

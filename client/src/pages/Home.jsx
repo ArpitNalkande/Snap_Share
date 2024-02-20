@@ -10,20 +10,28 @@ import {
   TextInput,
   TopBar,
 } from "../components";
-import { suggest, requests, posts } from "../assets/data";
+// import { suggest, requests, posts } from "../assets/data";
 import { Link } from "react-router-dom";
 import { NoProfile } from "../assets";
 import { BsFiletypeGif, BsPersonFillAdd } from "react-icons/bs";
 import { BiImages, BiSolidVideo } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { apiRequest, handleFileUpload, fetchPosts, likePost } from "../utils";
+import {
+  apiRequest,
+  handleFileUpload,
+  fetchPosts,
+  likePost,
+  deletePost,
+  sendFriendRequest,
+  getUserInfo,
+} from "../utils";
+import { UserLogin } from "../redux/userSlice";
 
 const Home = () => {
   const { user, edit } = useSelector((state) => state.user);
   const { posts } = useSelector((state) => state.posts);
-
-  const [friendRequest, setFriendRequest] = useState(requests);
-  const [suggestedFriends, setSuggestedFriends] = useState(suggest);
+  const [friendRequest, setFriendRequest] = useState([]);
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [errMsg, setErrMsg] = useState("");
   const [file, setFile] = useState(null);
   const [posting, setPosting] = useState(false);
@@ -77,12 +85,62 @@ const Home = () => {
     await likePost({ uri: uri, token: user?.token });
     await fetchPost();
   };
-  const handleDelete = async (data) => {};
-  const fetchFriendrequests = async (data) => {};
-  const fetchSuggestedFriends = async (data) => {};
-  const handleFriendRequest = async (data) => {};
-  const acceptFriendRequest = async (data) => {};
-  const getUser = async (data) => {};
+  const handleDelete = async (id) => {
+    // console.log("Deleting post with ID:", id);
+    await deletePost({ id, token: user.token });
+    await fetchPost();
+  };
+
+  const fetchFriendrequests = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/get-friend-request",
+        token: user?.token,
+        method: "POST",
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchSuggestedFriends = async () => {
+    try {
+      const res = await apiRequest({
+        url: "/users/suggested-friends",
+        token: user?.token,
+        method: "POST",
+      });
+      setSuggestedFriends(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleFriendRequest = async (id) => {
+    try {
+      const res = await sendFriendRequest({ token: user.token, id: id }); // Pass an object with token and id properties
+      await fetchSuggestedFriends();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const acceptFriendRequest = async (id, status) => {
+    try {
+      const res = await apiRequest({
+        url: "/users/accept-request",
+        token: user?.token,
+        method: "POST",
+        data: { rid: id, status },
+      });
+      setFriendRequest(res?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getUser = async () => {
+    const res = await getUserInfo({ token: user?.token }); // Corrected to pass token as an object
+    const newData = { token: user?.token, ...res };
+    dispatch(UserLogin(newData));
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -210,7 +268,7 @@ const Home = () => {
                   key={post?._id}
                   post={post}
                   user={user}
-                  deletePost={handleDelete}
+                  deletePost={() => handleDelete(post?._id)} // Pass post._id to handleDelete
                   likePost={handleLikePost}
                 />
               ))
@@ -221,7 +279,7 @@ const Home = () => {
             )}
           </div>
 
-          {/* RIGJT */}
+          {/* RIGHT */}
           <div className="hidden w-1/4 h-full lg:flex flex-col gap-8 overflow-y-auto">
             {/* FRIEND REQUEST */}
             <div className="w-full bg-primary shadow-sm rounded-lg px-6 py-5">
@@ -255,10 +313,12 @@ const Home = () => {
                     <div className="flex gap-1">
                       <CustomButton
                         title="Accept"
+                        onClick={() => acceptFriendRequest(_id, "Accepted")}
                         containerStyles="bg-[#0444a4] text-xs text-white px-1.5 py-1 rounded-full"
                       />
                       <CustomButton
                         title="Deny"
+                        onClick={() => acceptFriendRequest(_id, "Denied")}
                         containerStyles="border border-[#666] text-xs text-ascent-1 px-1.5 py-1 rounded-full"
                       />
                     </div>
@@ -301,7 +361,7 @@ const Home = () => {
                     <div className="flex gap-1">
                       <button
                         className="bg-[#0444a430] text-sm text-white p-1 rounded"
-                        onClick={() => {}}
+                        onClick={() => handleFriendRequest(friend?._id)}
                       >
                         <BsPersonFillAdd size={20} className="text-[#0f52b6]" />
                       </button>
