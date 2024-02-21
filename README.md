@@ -8,5 +8,5 @@ SnapShare is a Full-Stack Social Media Application that uses  ReactJs, and Tailw
  4. Create Post <br /> 
  5. Advanced Comment system (comments with sub-comments) <br /> 
  6. Like posts and comments <br /> 
- 7.Delete post <br /> 
+ 7. Delete post <br /> 
  8. Friend Request (send request, accept or deby) and others.....
