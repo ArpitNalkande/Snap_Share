@@ -1,8 +1,8 @@
 import axios from "axios";
 import { SetPosts } from "../redux/postSlice";
 
-const API_URL = "https://snapshare-dusky.vercel.app/";
-// const API_URL = "https://social-media-sphy.onrender.com";
+// const API_URL = "https://snapshare-dusky.vercel.app/";
+const API_URL = "https://social-media-sphy.onrender.com/";
 
 // const API_URL = "http://localhost:8080";
 
